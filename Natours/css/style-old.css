@@ -1,0 +1,207 @@
+/*
+COLORS:
+
+Light green: #7ed56f
+Medium green: #55c57a
+Dark green: #28b485
+
+*/
+
+*, *::after, *::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: inherit;
+}
+
+/* Die *-categorie wordt niet automatisch ook toegepast op de pseudo-element before en after */
+
+/* box-sizing hier en in body: hierboven dwing je * om elders te kijken wat het moet zijn. Doet verder niet zoveel nu */
+
+html {
+    font-size: 62.5%;
+}
+
+/* dit ding hier ^ in de html is de root font-size. Alle elementen uitgedrukt in rem zijn hierop gebaseerd. Om dat makkelijk te maken, zijn we uitgegaan van een root van 10px, want dan hoef je niet steeds te rekenen met die 16 (note to self: IT'ers zijn niet per se goed in rekenen)(note to self: serieus, wie wel? Als wiskundeleraren zichzelf al niet vertrouwen). Om vervolgens te zorgen dat de root dus die 10px is, maar nog wel afhangt van wat de user instelt (slechtzienden zoals ik willen grotere lettertjes) moet het dus 10/16 = 5/8 = 62.5% worden van de browser default */
+
+body {
+    font-family: "Lato", sans-serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.7;
+    color: #777;
+    padding: 3rem;
+
+    box-sizing: border-box;
+}
+
+.header {
+    height: 95vh;
+    background-image: linear-gradient(
+        to right bottom, 
+        rgba(127, 213, 112, 0.8), 
+        rgba(40, 180, 133, 0.8)), 
+        url(../img/hero.jpg);
+    background-position: top;
+    background-size: cover;
+    position: relative;
+    clip-path: polygon(0 0,100% 0,100% 75vh,0 100%)
+}
+
+.header__logo-box {
+    position: absolute;
+    top: 4rem;
+    left: 4rem;
+}
+
+/* positie absoluut voor als je een element op een bepaald punt wilt ankeren aan het ouderelement. Daarvoor moet dat ouderelement positie relatief hebben. */
+
+.header__logo {
+    height: 3.5rem;
+}
+
+.header__text-box {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+/* transform translate: omdat ie voor de positie anders uitgaat van de linkerbovenhoek van het plaatje. Hiermee zet je het element de helft van zijn lengte en breedte terug naar de linkerbovenhoek, waarmee het ankerpunt nu het midden van het element is */
+/* dat position top left is dus positie tov het ouderelement, transform translate tov zichzelf */
+
+.heading-primary {
+    color: #fff;
+    text-transform: uppercase;
+
+    backface-visibility: hidden;
+    margin-bottom: 6rem;
+}
+
+/* backvis hidden: omdat je soms kennelijk met animaties weleens hebt dat zoń element niet helemaal op dezelfde positie blijft en nog een beetje verschuift. Dit houdt hem op zijn plaats */
+
+.heading-primary--main {
+    display: block;
+    font-size: 6rem;
+    font-weight: 400;
+    letter-spacing: 3.5rem;
+
+    animation-name: moveInLeft;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+}
+
+.heading-primary--sub {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1.7rem;
+    animation: moveInRight 1s ease-out;    
+}
+
+/* anim: dit is de shortcut, met gewoon alle eigenschappen in één key geplempt. Hierboven staat ie nog uitgeschreven */
+/* keyframes hieronder is als het ware waar de functie gedeclaard wordt, hierboven bij het element zelf staat dan de callback. oid */
+
+@keyframes moveInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-10rem);
+    }
+
+    80% {
+        transform: translateX(1rem);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes moveInRight {
+    0% {
+        opacity: 0;
+        transform: translateX(10rem);
+    }
+
+    80% {
+        transform: translateX(-1rem);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0)
+    }
+}
+
+@keyframes moveInBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(3rem);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0)
+    }
+}
+
+.btn:link, .btn:visited {
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1.5rem 4rem;
+    display: inline-block;
+    border-radius: 10rem;
+    transition: all .2s;
+    position: relative;
+    font-size: 1.6rem;
+}
+
+/* hierboven staat transition, zeg maar het uitgangspunt van de animatie, in het element zelf */
+/* hieronder staan de transforms die zeggen wat er in welk geval (hover) moet gebeuren tov die uitgangspositie */
+
+.btn:hover {
+    transform: translateY(-.3rem);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* shadow: eerst de assen X en Y (schaduw eronder of ernaast of allebei), dan grootte, dan blurriness, dan kleur (hier 0.2 opaak zwart) */
+
+.btn:active {
+    transform: translateY(-.1rem);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,0.2);
+}
+
+.btn--white {
+    background-color: #fff;
+    color: #777;
+}
+
+.btn::after {
+    content: "";
+    display: inline-block;
+    border-radius: 10rem;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: all 0.4s;
+}
+
+.btn--white::after {
+    background-color: #fff;
+}
+
+.btn:hover::after {
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
+}
+
+.btn--animated {
+    animation: moveInBottom .5s ease-out .75s;
+    animation-fill-mode: backwards;
+}
+/* met die backwards past ie de waarden van de 0%-staat van de animatie alvast toe op het element. Dus in dit geval is de knop 0 opaak voor de animatie begint.*/
+
