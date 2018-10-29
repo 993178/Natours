@@ -1,0 +1,55 @@
+.header {
+    height: 85vh;
+    background-image: linear-gradient(
+        to right bottom, 
+        rgba($color-primary-light, 0.8), /* in SCSS kun je #kleuren in een rgba-ding zetten, in CSS niet */
+        rgba($color-primary-dark, 0.8)), 
+        url(../img/hero-small.jpg);
+    background-position: top;
+    background-size: cover;
+    position: relative;
+
+    @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) { // clip-path wordt niet door alle browsers ondersteund; als ie het tóch niet doet, kun je net zo goed die hoek weglaten en de default header wat minder hoog maken...
+        height: 95vh;
+        -webkit-clip-path: polygon(0 0,100% 0,100% 75vh,0 100%); //webkitding is voor meer browsers
+        clip-path: polygon(0 0,100% 0,100% 75vh,0 100%); // je definieert 4 punten op de X- en Y-as, beginnend linksboven en dan met de klok mee    
+    }
+
+    @include respond(phone) {
+        -webkit-clip-path: polygon(0 0,100% 0,100% 85vh,0 100%); 
+        clip-path: polygon(0 0,100% 0,100% 85vh,0 100%);    
+    }
+
+    @media only screen and (min-resolution: 192dpi) and (min-width: 37.5em), // 192dpi: Apple ding voor high resolution screens, wordt als richtlijn gebruikt. De eerste situatie is dus hoge resolutie EN een scherm groter dan 600px breed, aangezien het kleinere achtergrondplaatje groot genoeg is voor kleine schermpjes.
+        only screen and (-webkit-min-device-pixel-ratio: 2) and (min-width: 37.5em), // voor Safari! De 2 is weer hetzelfde als 2x, waarbij 1 pixel op 2*2 pixels wordt weergegeven (high res scherm)
+        only screen and (min-width: 125em) {           // voor schermen groter dan 2000px
+            background-image: linear-gradient(
+            to right bottom, 
+            rgba($color-primary-light, 0.8),
+            rgba($color-primary-dark, 0.8)), 
+            url(../img/hero.jpg);               // dit is de grote versie van 2000px breed; voor schermen met een lagere resolutie is de kleine versie goed genoeg, dus die staat nu als default hierboven
+    }
+
+    &__logo-box {
+        position: absolute;
+        top: 4rem;
+        left: 4rem;
+    }
+    
+    /* positie absoluut voor als je een element op een bepaald punt wilt ankeren aan het ouderelement. Daarvoor moet dat ouderelement positie relatief hebben. */
+    
+    &__logo {
+        height: 3.5rem;
+    }
+    
+    &__text-box {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+
+        /* transform translate: omdat ie voor de positie anders uitgaat van de linkerbovenhoek van het plaatje. Hiermee zet je het element de helft van zijn lengte en breedte terug naar de linkerbovenhoek, waarmee het ankerpunt nu het midden van het element is */
+        /* dat position top left is dus positie tov het ouderelement, transform translate tov zichzelf */
+    }
+}

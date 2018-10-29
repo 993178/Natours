@@ -1,0 +1,198 @@
+.card {
+    perspective: 150rem; // hoe hoger het nummer, hoe minder het effect. 15px is idioot groot, alsof je een deur in je gezicht krijgt
+    -moz-perspective: 150rem;
+    position: relative;
+    height: 52rem; // ouderelement is ingestort omdat alle kinderen een absolute positie hebben; de hoogte ook hier bepalen fixt dat dan weer (bij floatende kinderen doe je clearfix, bij absolute kinderen kennelijk dit. Dit was ook om te zorgen dat beide zijden dezelfde hoogte hebben als elkaar en hun container
+
+    &__side {
+        height: 52rem;
+        transition: all .8s ease; 
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        border-radius: .3rem;
+        overflow: hidden; //het plaatje op de kaart verbergt anders de afgeronde hoekjes van de kaart en dat kenne we nie hebbe. Dit werkt in dit geval overigens niet omdat clip-path 'm negeert
+
+        @include boxshadow(1.5, 4, .15);
+        
+        &--front {
+            background-color: $color-light;
+        }
+
+        &--back {
+            transform: rotateY(180deg); // achterkant is in normale toestand al gedraaid, en draait 'door' bij hoveren
+
+            &-1 {
+                background-image: linear-gradient(to right bottom, $color-secondary-light, $color-secondary-dark);
+            }
+
+            &-2 {
+                background-image: linear-gradient(to right bottom, $color-primary-light, $color-primary-dark);
+
+            }
+
+            &-3 {
+                background-image: linear-gradient(to right bottom, $color-tertiary-light, $color-tertiary-dark);
+
+            }
+        }
+    }
+
+    &:hover &__side--front {
+        transform: rotateY(-180deg); //voorkant moet de andere kant op draaien, anders draait de kaart halverwege terug maar met een andere kant voor - raar gezicht
+    }
+
+    &:hover &__side--back {
+        transform: rotateY(0);
+    }
+
+    //eigenlijke styling kaarten
+    &__picture {
+        background-size: cover;
+        height: 23rem;
+        background-blend-mode: screen;
+        -webkit-clip-path: polygon(0 0,100% 0,100% 85%,0 100%);
+        clip-path: polygon(0 0,100% 0,100% 85%,0 100%);         // niet voor IE en Edge
+        border-top-left-radius: .3rem;
+        border-top-right-radius: .3rem;  // de clip-path overrides die overflow-fix die we hierboven hadden... Dus nu moet het zo.
+
+        &--1 {
+            background-image: linear-gradient(to right bottom, $color-secondary-light, $color-secondary-dark), url(../img/nat-5.jpg);
+        }
+
+        &--2 {
+            background-image: linear-gradient(to right bottom, $color-primary-light, $color-primary-dark), url(../img/nat-6.jpg);
+        }
+
+        &--3 {
+            background-image: linear-gradient(to right bottom, $color-tertiary-light, $color-tertiary-dark), url(../img/nat-7.jpg);
+        }
+    }
+
+    &__heading {
+        font-size: 2.8rem;
+        font-weight: 300;
+        text-transform: uppercase;
+        text-align: right;
+        color: $color-light;
+        position: absolute;
+        top: 12rem;
+        right: 2rem;
+        width: 75%;
+    }
+
+    &__heading-span {
+        padding: 1rem 1.5rem;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;    // deze regel past de stijl - de padding - toe op beide stukken van de kop, ook al is het één regel tekst die over twee regels verdeeld is
+
+        &--1 {
+            background-image: linear-gradient(to right bottom, rgba($color-secondary-light, .85), rgba($color-secondary-dark, .85));
+        }
+
+        &--2 {
+            background-image: linear-gradient(to right bottom, rgba($color-primary-light, .85), rgba($color-primary-dark, .85));
+        }
+
+        &--3 {
+            background-image: linear-gradient(to right bottom, rgba($color-tertiary-light, .85), rgba($color-tertiary-dark, .85));
+        }
+    }
+
+    &__details {
+        padding: 3rem;
+
+        ul {
+            list-style: none;
+            width: 80%;
+            margin: 0 auto;  //om automatisch een block in een block te centreren
+
+            li {
+                text-align: center;
+                font-size: 1.5rem;
+                padding: 1rem;
+
+                &:not(:last-child) {
+                    border-bottom: .1rem solid $color-grey-light-2;
+                }
+            }
+        }
+    }
+
+    //Verveeld gezicht: "...Achterkant..."
+    &__cta {
+        @include center5050; //ook centreren van block in block?? ...Wanneer gebruik je dit en wanneer margin 0 auto?
+        width: 90%;
+        text-align: center;
+    }
+
+    &__price-box {
+        text-align: center;
+        color: $color-light;
+        margin-bottom: 8rem;
+    }
+
+    &__price-only {
+        font-size: 1.4rem;
+        text-transform: uppercase;
+    }
+
+    &__price-value {
+        font-size: 6rem;
+        font-weight: 100;
+    }
+
+
+
+
+
+
+    @media only screen and (max-width: 56.25em),
+        only screen and (hover:none) {              // er zijn ook grotere devices met touchscreen, dus hier vang je alles eruit met een touchscreen, ook als ze kleiner zijn dan die 56.25em. Alles pakken zónder touchscreen gaat met (hover: hover)
+        height: auto;
+        border-radius: .3rem;
+        background-color: $color-light;
+        @include boxshadow(1.5, 4, .15);
+
+        &__side {
+            height: auto;
+            position: relative;
+            box-shadow: none;
+              
+            &--back {
+                transform: rotateY(0deg);
+                -webkit-clip-path: polygon(0 15%,100% 0,100% 100%,0 100%);
+                clip-path: polygon(0 15%,100% 0,100% 100%,0 100%);
+            }
+        }
+    
+        &:hover &__side--front {
+            transform: rotateY(0deg);
+        }
+
+        &__details {
+            padding: 1rem 3rem;
+        }
+    
+        //Verveeld gezicht: "...Achterkant..."
+        &__cta {
+            position: relative;
+            top: 0;
+            left: 0;
+            transform: translate(0);
+            width: 100%;
+            padding: 7rem 4rem 4rem 4rem;
+        }
+    
+        &__price-box {
+            margin-bottom: 3rem;
+        }
+      
+        &__price-value {
+            font-size: 4rem;
+        }    
+    }
+}

@@ -1,0 +1,102 @@
+.btn {
+    &,  // <button> heeft geen :link en :visited, dus daarom deze lege toevoeging voor btn zelf.
+    &:link, 
+    &:visited {
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: 1.5rem 4rem;
+        display: inline-block;
+        border-radius: 10rem;
+        transition: all .2s;
+        position: relative;
+        font-size: $default-font-size;
+
+        // <button>  van defaultgedrag ontdoen:
+        border: none;
+        cursor: pointer;
+    }
+    
+    /* hierboven staat transition dat zorgt dat zo'n animatie niet abrupt verloopt maar gladjes */
+    /* hieronder staan de transforms die zeggen wat er in welk geval (hover) moet gebeuren tov die uitgangspositie */
+    
+    &:hover,
+    &:focus {               // Jonas zet deze onder :active, maarrr... die is én minder zichtbaar, én ik zou hem niet gelijkstellen aan het indrukken van die knop - dat zijn toch zeker twee verschillende dingen??
+        outline: none;
+        transform: translateY(-.3rem);
+        box-shadow: 0 10px 20px rgba($color-black,.2);
+
+        &::after {
+            transform: scaleX(1.4) scaleY(1.6);
+            opacity: 0;
+        }
+    }
+    
+    /* shadow: eerst de assen X en Y (schaduw eronder of ernaast of allebei), dan grootte, dan blurriness, dan kleur (hier 0.2 opaak zwart) */
+    
+    &:active {
+        transform: translateY(-.1rem);
+        @include boxshadow(.5,1,.2);
+    }
+    
+    &--white {
+        background-color: $color-light;
+        color: $color-grey-dark-1;
+
+        &::after {
+            background-color: $color-light;
+        }
+    }
+    
+    &--green {
+        background-color: $color-primary;
+        color: $color-light;
+
+        &::after {
+            background-color: $color-primary;
+        }
+    }
+    
+&::after {
+        content: "";
+        display: inline-block;
+        border-radius: 10rem;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        transition: all .4s;
+    }
+    
+    &--animated {
+        animation: moveInBottom .5s ease-out .75s;
+        animation-fill-mode: backwards;
+    }
+    /* met die backwards past ie de waarden van de 0%-staat van de animatie alvast toe op het element. Dus in dit geval is de knop 0 opaak voor de animatie begint.*/   
+}
+
+.btn-text {
+    &:link,
+    &:visited {
+        font-size: $default-font-size;
+        color: $color-primary;
+        display: inline-block;
+        text-decoration: none;
+        border-bottom: 1px solid $color-primary;
+        padding: 3px;
+        transition: all .2s;
+    }
+
+    &:hover {
+        background-color: $color-primary;
+        color: $color-light;
+        @include boxshadow(1,2,.15);
+        transform: translateY(-2px);
+    }
+
+    &:active {
+        @include boxshadow(.5, 1, .15);
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,105 @@
+.popup {
+    height: 100vh;
+    width: 100%;
+    background-color: rgba($color-black, .8);
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    z-index: 100;
+
+    opacity: 0;
+    visibility: hidden;
+    transition: all .3s;
+
+    @supports (-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px)) {   // ALS de browser die backdrop ondersteunt (mét daadwerkelijke value), dan geldt een andere regel voor de achtergrondkleur
+        background-color: rgba($color-black, .3);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);    
+    }
+
+    &__content {
+        background-color: $color-light;
+        width: 75%;
+        @include center5050;
+        @include boxshadow(2,4,.2);
+        border-radius: .3rem;
+        overflow: hidden;
+        display: table; // ouderelement krijgt table, kinderen table-cell, kinderen krijgen dezelfde height
+        opacity: 0;
+        transform: translate(-50%,-50%) scale(.25); //transform staat al in de center5050-mixin, dus deze zou die dan overriden en dan wordt de popup naar de rechteronderhoek geduwd; vandaar de herhaling hier en dan pas scale
+        transition: all .5s .2s;
+    }
+
+    &__left { 
+        width: 33.4%;
+        display: table-cell;
+
+        @include respond(tab-port) {
+            display: none;
+        }
+    }
+
+    &__right {
+        width: 66.6%;
+        display: table-cell;
+        vertical-align: middle; // zodat deze table-cell midden naast de andere staat
+        padding: 3rem 5rem;
+    }
+
+    &__img {
+        display: block;
+        width: 100%;
+    }
+
+    &__text {
+        font-size: 1.4rem;
+        margin-bottom: 4rem;
+
+        -moz-column-count: 2; //voor Mozilla
+        -moz-column-gap: 4rem; 
+        -moz-column-rule: 1px solid $color-grey-light-2;
+
+        column-count: 2;
+        column-gap: 4rem; // standaard 1em, een em is gelijk aan de font-size, hier dus 14 pixels
+        column-rule: 1px solid $color-grey-light-2;
+
+        -moz-hyphens: auto; // veel prefixen anders werkt het nergens........ en bij mij nog steeds niet.
+        -ms-hyphens: auto;
+        -webkit-hyphens: auto;
+        hyphens: auto; // om dit te kunnen gebruiken moet je in de html-tag specificeren welke taal het is. en? nl? la? 
+
+
+    }
+
+    &:target {  // zie anchoraantekening onder html: je geeft een sectie een id, geeft die id op als linkdoel in een button (#idnaam), waarop dat doel dus het target is en er hier iets mee gedaan kan worden...
+        opacity: 1;
+        visibility: visible;
+    }
+
+    &:target &__content { //als popup het target is, wordt dit toegepast op content
+        opacity: 1;
+        transform: translate(-50%,-50%) scale(1); // wéér met herhaling van de translate!
+    }
+
+    &__close {  //close button met als target (linkdoel) section-tours... wat bij mij overigens geen id is maar alleen een class. Wel een unieke class. Hiermee verandert target van popup naar section-tours en verdwijnt de popup weer.
+        &:link,
+        &:visited {
+            color: $color-grey-dark-1;
+            position: absolute;
+            top: 2.5rem;
+            right: 2.5rem;
+            font-size: 3rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all .2s;
+            line-height: 1; //omdat het gebruikte symbool een tekstsymbool is en dus een line-height heeft en daardoor lager verschijnt dan je zou verwachten/willen
+        }
+
+        &:hover,
+        &:focus {
+            outline: none;
+            color: $color-primary;
+        }
+    }
+}

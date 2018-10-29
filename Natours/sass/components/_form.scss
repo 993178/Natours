@@ -1,0 +1,108 @@
+.form {
+    &__group:not(:last-child) {
+        margin-bottom: 2rem;
+    }
+
+    &__input {
+        font-size: 1.5rem;
+        font-family: inherit; //is standaard NIET het door jou gekozen lettertype, dus dat moet je afdwingen
+        color: inherit; //zie family
+        padding: 1.5rem 2rem; //zijkanten iets meer dan erboven anders ziet het er gek uit aldus Jonas
+        border-radius: .2rem;
+        background-color: rgba($color-light, .5);
+        border: none;
+        border-bottom: .3rem solid transparent; // anders verschijnt ie opeens als dat element actief is, waardoor de dingen eronder omlaag opschuiven en dat ziet er raar uit
+        width: 90%;
+        display: block;
+        transition: all .3s;
+
+        @include respond(tab-port) {
+            width: 100%;
+        }
+
+        &:focus {
+            outline: none; //dus nu licht ie niet meer oranje op (blauw bij Jonas)
+            @include boxshadow(1,2,.1);
+            border-bottom: .3rem solid $color-primary; // deze en boxshadow zijn om de Miriams van deze wereld toch te laten zien wat er nu actief is, ook al gebruiken ze geen muis
+
+            &:invalid {
+                border-bottom: .3rem solid $color-secondary-dark;
+            }
+        }
+
+        &::-webkit-input-placeholder { // pseudo-ELEMENT, dus ::    hover en focus zijn pseudo-CLASSES, dus :    Dit ding is alleen nog bij Safari en Chrome
+            color: $color-grey-dark-1;
+        }
+    }
+
+    &__label {                  // inhoud van label onder veld met die tekst over wat er in het veld moet komen
+        font-size: 1.5rem;      // Maar wat doet die input-placeholder nou precies?
+        //font-weight: 700;     // meh
+        margin-left: 2rem;
+        margin-top: .7rem;
+        display: block;
+        transition: all .3s;
+    }
+
+    &__input:placeholder-shown + &__label { // als veld actief is, moet label aldus gestyld worden. Maar label valt niet onder input; de twee zijn beide kinderen van group. Met + voeg je het eerstvolgende kind toe, met ~ een ander jonger kind
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-4rem);
+    }
+
+    &__radio-group { 
+        width: 49%;
+        display: inline-block;
+
+        @include respond(tab-port) {
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+    }
+
+    &__radio-input {   // zie html: property name met zelfde value bij alle knoppen zorgt ervoor dat je er maar één kunt aanklikken
+        //display: none; //hiermee verberg je de echte radioknop die de functionalitiet herbergt, zodat het LIJKT of jouw zelfgebouwde rondjes de radioknoppen zijn. Fake news.
+        opacity: 0;         // om focus zichtbaar te krijgen voor keyboardgebruikers
+    }
+
+    &__radio-label {
+        font-size: $default-font-size;
+        cursor: pointer;  // om de cursor in een wijzend handje te veranderen, alsof het een link is
+        position: relative;
+        padding-left: 3.5rem;
+    }
+
+    &__radio-button {
+        height: 3rem;
+        width: 3rem;
+        border: .5rem solid $color-primary;
+        border-radius: 50%;
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        top: -.4rem;
+
+        &::after {
+            content: "";
+            display: block;
+            height: 1.3rem;
+            width: 1.3rem;
+            border-radius: 50%;
+            @include center5050;
+            background-color: $color-primary;
+            opacity: 0;
+            transition: opacity .2s;
+        }
+    }
+
+    &__radio-input:checked + &__radio-label &__radio-button::after {   //weer zo'n geval dat je het eerste ding selecteert en het tweede ding stylt.
+        opacity: 1;
+    }
+
+    &__radio-input:focus + &__radio-label &__radio-button::after {  // om focus zichtbaar te maken vor keyboardgebruikers
+        opacity: 1;
+        background-color: $color-primary-light;     //anders zie je nog geen focus als je erheen tabt
+    }
+}
+
+// nog steeds 1 raar ding: als je zonder muis op één van de radiobuttons focust en dan op Enter drukt, gaat ie óók naar het begin van de pagina, alsof het een # link is... Raar.

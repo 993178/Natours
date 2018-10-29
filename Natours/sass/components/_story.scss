@@ -1,0 +1,78 @@
+.story {
+    width: 75%;
+    margin: 0 auto;
+    @include boxshadow(3,6,.1);
+    background-color: rgba($color-grey-light-1,.6);
+    border-radius: .3rem;
+    padding: 6rem;
+    padding-left: 9rem; //omdat je de cirkel 3rem naar links verplaatst, is er aan deze kant nu minder ruimte
+    font-size: $default-font-size;
+    transform: skewX(-12deg);
+
+    @include respond(tab-port) {
+        width: 100%;
+        padding: 4rem;
+        padding-left: 7rem;
+    }
+
+    @include respond(phone) {
+        transform: skewX(0);
+    }
+
+    &__shape {
+        width: 15rem;
+        height: 15rem;
+        float: left;
+        transform: translateX(-3rem) skewX(12deg); //dus om ruimte te krijgen tussen cirkel en tekst pas je bij een floated ding niet padding of margin aan, maar doe je dat zo....... okee.
+        position: relative;
+        overflow: hidden;
+        border-radius: 50%;
+
+        @supports (clip-path: circle(0 at 0 0)) or (-webkit-clip-path: circle(0 at 0 0)) {
+            -webkit-clip-path: circle(50% at 50% 50%); 
+            clip-path: circle(50% at 50% 50%); 
+            -webkit-shape-outside: circle(50% at 50% 50%); //voor Safari en IE en Edge
+            shape-outside: circle(50% at 50% 50%); // moet i.c.m. float, width en height
+            border-radius: none;  // het verschil tussen boru en clippath is dat bij de tweede de tekst zich aan de ronde vorm kan aanpassen    
+        }
+
+        @include respond(phone) {
+            transform: translateX(-3rem) skewX(0);
+        }    
+    }
+
+    &__image {
+        height: 100%; //hij zit IN story__shape en die heeft al een height, kijk maar. Toch: zonder height property hier krijg je het heeeeele plaatje ongeschaald, waarvan je in dit geval alleen het cirkeltje linksboven ziet. Met width ipc height is ie niet groot genoeg om de hele cirkel te vullen
+        transform: translateX(-4rem) scale(1.4);    // Ik vind de compositie met roeibootvrouw rechts mooier
+        transition: all .5s;
+    }  // okee, bij Jonas werd het plaatje opeens ellipsvormig, wat hij fixte met een bakvis op deze plek
+
+    &__caption{
+        @include center5050; //beginpositie voor animatie is ergens eronder, vandaar Y-as positief
+        color: $color-light;
+        text-transform: uppercase;
+        font-size: 1.7rem;
+        text-align: center;
+        opacity: 0;
+        transition: all .5s;
+        backface-visibility: hidden;
+    }
+
+    &__text {
+        transform: skewX(12deg);  // hier werkt de truc met & > * {} niet, want de shape heeft al een property transform die voorrang krijgt over deze (ze worden niet automatisch allebei toegepast tenzij je expliciet beide vervormingen in dezelfde transform zet (en de tekst hier apart terugskewt).
+
+        @include respond(phone) {
+            transform: skewX(0);
+        }    
+    }
+
+    &:hover &__caption {
+        opacity: 1;
+        transform: translate(-50%,-50%); //met herhaling van de X-as, anders verschuift ie
+    }
+
+    &:hover &__image {
+        transform: translateX(-4rem) scale(1);
+        filter: blur(.3rem) brightness(90%); 
+    }
+}

@@ -1,0 +1,32 @@
+.feature-box {
+    background-color: rgba($color-light, .8);
+    font-size: 1.5rem;
+    padding: 2.5rem;
+    text-align: center;
+    border-radius: .3rem;
+
+    @include boxshadow(1.5, 4, .8);
+
+    transition: transform .3s; //nu geen 'all' omdat het alleen over die ene gaat
+
+    @include respond(tab-port) {
+        padding: 2rem;
+    }
+
+    &__icon {
+        font-size: 6rem;
+        margin-bottom: .5rem;
+        display: inline-block;
+        background-image: linear-gradient(to right, $color-primary-light, $color-primary-dark);
+        -webkit-background-clip: text; //dit knipt de achtergrond bij tot die plaatsen waar de tekst is (zodat je de tekst zelf onzichtbaar moet maken om het te kunnen zien)
+        color: transparent;
+
+        @include respond(tab-port) {
+            margin-bottom: 0;
+        }    
+    }
+
+    &:hover {
+        transform: translateY(-1.5rem) scale(1.03);
+    }
+} //class feature-box__text is niet nodig; font-size wordt geërfd
